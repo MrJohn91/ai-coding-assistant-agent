@@ -61,8 +61,7 @@ result = await mcp_client.call_tool(
 
 ### Problem 2: Can't Collaborate on Tasks
 
-**Cole's Quote:**
-> "They also have the ability to create their own internal task lists so they can organize their own work and knock things out task by task... but the problem is there's not really a way for us to collaborate with the AI coding assistant on these things... we can't really interact with this task list. It's more of an internal tool."
+> They also have the ability to create their own internal task lists so they can organize their own work and knock things out task by task... but the problem is there's not really a way for us to collaborate with the AI coding assistant on these things... we can't really interact with this task list. It's more of an internal tool.
 
 **What This Meant for Sales Bike Agent:**
 
@@ -93,7 +92,7 @@ Sales Bike Agent Project in Archon:
 
 **Real-Time Collaboration Example:**
 
-As Cole shows in the video: *"We can even create our own tasks here without even having to interrupt Claude Code. We can collaborate with it because the next time it looks at the tasks that it has to do, it'll find those new tasks that we have created for it."*
+We can even create our own tasks here without even having to interrupt Claude Code. We can collaborate with it because the next time it looks at the tasks that it has to do, it'll find those new tasks that we have created for it."
 
 When you (the user) said "did the implementation check documents in archon?", I could see that as a gap and we refactored. If this was a task in Archon, you could have added it mid-development, and I would have picked it up automatically.
 
