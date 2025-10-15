@@ -1,0 +1,428 @@
+{
+	"info": {
+		"_postman_id": "sales-bike-agent-api",
+		"name": "Sales Bike Agent API",
+		"description": "Complete API collection for testing Sales Bike Agent with Pydantic AI and Mem0 integration",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"health"
+					]
+				},
+				"description": "Check if the API is running"
+			},
+			"response": []
+		},
+		{
+			"name": "Pydantic AI Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/v2/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"health"
+					]
+				},
+				"description": "Check Pydantic AI agent and dependencies status (Mem0, MCP, etc.)"
+			},
+			"response": []
+		},
+		{
+			"name": "V1 - Create Conversation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Save session_id for subsequent requests",
+							"if (pm.response.code === 201) {",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"session_id\", jsonData.session_id);",
+							"    console.log(\"Session ID saved: \" + jsonData.session_id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/conversations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"conversations"
+					]
+				},
+				"description": "Create a new conversation session (Legacy V1 endpoint - may not work if orchestrator failed to initialize)"
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Mountain Bike Inquiry)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"I'm looking for a mountain bike for trail riding under €2000. What do you recommend?\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Send a product inquiry message using Pydantic AI agent. This will trigger the search_products tool."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (FAQ Question)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"What's your warranty policy on mountain bikes?\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Ask a FAQ question. This will trigger the search_faq tool."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Purchase Intent)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"The Trailblazer 500 looks perfect! I want to buy it. How do I proceed?\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Express purchase intent. The agent should detect this and ask for contact information."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Provide Name)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"My name is John Doe\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Provide name when agent asks for it during lead capture flow."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Provide Email)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"john.doe@example.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Provide email when agent asks for it. This should trigger the capture_lead tool."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Provide Phone - Optional)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"My phone is +1-555-123-4567\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Optionally provide phone number during lead capture."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Returning Customer - Test Mem0)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"Hi! I'm back. I was looking at mountain bikes last time.\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Test memory recall. The agent should remember previous conversation if the same session_id is used, or recall from Mem0 if user_id matches."
+			},
+			"response": []
+		},
+		{
+			"name": "V2 - Send Message (Price Filtering)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"Show me electric bikes under €3000\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/v2/conversations/{{session_id}}/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v2",
+						"conversations",
+						"{{session_id}}",
+						"messages"
+					]
+				},
+				"description": "Test product search with price filtering capability."
+			},
+			"response": []
+		},
+		{
+			"name": "V1 - Get Conversation History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/conversations/{{session_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"conversations",
+						"{{session_id}}"
+					]
+				},
+				"description": "Retrieve full conversation history for a session (Legacy V1 endpoint)"
+			},
+			"response": []
+		},
+		{
+			"name": "V1 - Delete Conversation",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/v1/conversations/{{session_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"conversations",
+						"{{session_id}}"
+					]
+				},
+				"description": "Delete a conversation session (Legacy V1 endpoint)"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-generate session_id if not exists",
+					"if (!pm.environment.get(\"session_id\")) {",
+					"    const uuid = require('uuid');",
+					"    pm.environment.set(\"session_id\", uuid.v4());",
+					"    console.log(\"Generated new session_id: \" + pm.environment.get(\"session_id\"));",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "session_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
